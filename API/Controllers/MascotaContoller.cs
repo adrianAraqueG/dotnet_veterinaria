@@ -64,7 +64,7 @@ namespace API.Controllers
             try{
                 var masc = await _unitOfwork.Mascotas.ObtenerMascXVeterinario(IdVet);
                 return _mapper.Map<List<MascotaSimpleDto>>(masc);
-                return Ok(masc);
+                // return Ok(masc);
             }catch(Exception err){
                 return NotFound($"No hay registros. \n {err}");
             }

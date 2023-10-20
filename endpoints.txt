@@ -1,7 +1,5 @@
 Mascotas:
     Mascotas y propietarios x raza
-Propietarios:
-    Buscar propietario y mascotas
 Citas:
     Buscar mascotas x motivo de consulta
 MedicamentoMovimientos:

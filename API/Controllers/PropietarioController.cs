@@ -26,6 +26,22 @@ namespace API.Controllers
         /*
         * MÉTODOS ESPECÍFICOS
         */
+        [HttpGet("listarPropsConMascotas")]
+        [MapToApiVersion("1.0")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<IEnumerable<MascotaSimpleDto>>> PropietariosConMascotas()
+        {
+            try{
+                var props = await _unitOfwork.Propietarios.ObtenerPropsConMasc();
+                // return _mapper.Map<List<MascotaSimpleDto>>(masc);
+                return Ok(props);
+            }catch(Exception err){
+                return NotFound($"No hay registros. \n {err}");
+            }
+        }
+
+
 
 
 

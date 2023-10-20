@@ -8,6 +8,6 @@ namespace Domain.Interfaces
 {
     public interface IPropietarioRepository : IGenericRepository<Propietario>
     {
-        
+        Task<IEnumerable<object>> ObtenerPropsConMasc();
     }
 }

@@ -25,15 +25,17 @@ public class UsuarioController : ApiBaseController
         _unitOfWork = unitOfWork;
         _mapper = mapper;
     }
-        [HttpPost("register")]
+
+
+    [Authorize(Roles = "Administrador")]
+    [HttpPost("register")]
     public async Task<ActionResult> RegisterAsync(RegisterDto model)
     {
-        Console.WriteLine("Hola");
         var result = await _usuarioService.RegisterAsync(model);
         return Ok(result);
     }
 
-    [HttpPost("token")]
+    [HttpPost("login")]
     public async Task<IActionResult> GetTokenAsync(LoginDto model)
     {
         var result = await _usuarioService.GetTokenAsync(model);

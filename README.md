@@ -1,150 +1,103 @@
-:shipit:🔐 Sistema de Autenticación con Tokens Personalizados 
+:shipit: Veterinaria
 ==================================================
 
-Este repositorio contiene un sistema de autenticación personalizado basado en tokens, cumpliendo con la restricción de no utilizar librerías externas como JWT.
+Este repositorio contiene una APP ASP.NET llamada Veterinaria que busca cumplir una serie de requerimientos.
 
-🎱 Descripción General
+🎱 Requerimientos
 -------------------
 
-El sistema se basa en la generación y validación manual de tokens usando el algoritmo **HMACSHA256**. Además de validar la firma del token, se verifica la fecha de expiración y se proporciona funcionalidad para refrescar y revocar tokens.
+#### Endpoints requeridos
+1. Crear un consulta que permita visualizar los veterinarios cuya especialidad sea Cirujano vascular. ✔️
+2. Listar los medicamentos que pertenezcan a el laboratorio Genfar ✔️
+3. Mostrar las mascotas que se encuentren registradas cuya especie sea felina. ✔️
+4. Listar los propietarios y sus mascotas. ✔️
+5. Listar los medicamentos que tenga un precio de venta mayor a 50000 ✔️
+6. Listar las mascotas que fueron atendidas por motivo de vacunacion en el primer trimestre del 2023
+7. Listar todas las mascotas agrupadas por especie. ✔️
+8. Listar todos los movimientos de medicamentos y el valor total de cada movimiento. 
+9. Listar las mascotas que fueron atendidas por un determinado veterinario. ✔️
+10. Listar los proveedores que me venden un determinado medicamento.
+11. Listar las mascotas y sus propietarios cuya raza sea Golden Retriver
+12. Listar la cantidad de mascotas que pertenecen a una raza a una raza. Nota: Se debe mostrar una lista de las razas y la cantidad de mascotas que pertenecen a la raza.
 
 🔧 Instalación
 -------------------
-+ Configurar las conexión a la base de datos en **appsettins.json**
-    ```
-    ...
-    "ConnectionStrings":{
-            "DefaultConnection": "server=localhost;user=root;password=;database=jwtmanual"
-        }
-    ...
-    ```
-+ Aplicar la migración a la base de datos:
-    ```
-    dotnet ef database update InitialCreate --project .\Persistence\
-    ```
-    **NOTA** En caso de que quieras crear y correr una nueva migración:
-    ```
-    dotnet ef database update YourMigration --project .\Persistence\ --startup-project .\API\ --output-dir .\Data\Migrations
-    dotnet ef database update YourMigration --project .\Persistence\
-    ```
-+ **OPCIONAL** Configurar la clave secreta de encriptación en el constructor de **UserService**:
-     ```
-    ...
-    public UserService(IUnitOfWork unitOfWork){
-        _unitOfWork = unitOfWork;
-        _tokenService = new TokenService("YOUR_SECRET_KEY");
-    }
-    ...
-    ```
-+ 🚀Lanzar la aplicación
-    ```
-    cd .\API\
-    dotnet run
-    ```
+1. Clonar el repo
+2. Importar default_db.sql a nuestro MySQL usando cualquier gestor de bases de datos.
+3. Configurar la conexión en ´appsettings.json´ (NO cambiar nombre de database)
+4. dotnet run 🚀☘️
 
 ## API Reference 🛰️
-
-#### Permite a los usuarios registrarse.
-
-```http
-  POST api/user/register
-  {
-      "username": "yourusername",
-      "password": "yourpassword",
-      "email": "email@domain.com"
-  }
+Antes de poder hacer consultas debemos loguearnos.
 ```
-
-#### Autentica a los usuarios y devuelve un token.
-
-```http
-  POST api/user/auth
-  {
-      "username": "yourusername",
-      "password": "yourpassword"
-  }
+    POST api/usuario/login
+    {
+      "Username": "admin",
+      "Password": "admin"
+    }
 ```
+Usaremos este token para todas las consultas.
 
-#### Verifica la validez de un token.
-
-```http
-  POST api/user/validate-token
-  {
-      "message": "statusmessage",
-      "isAuthenticated": bool,
-      "username": "yourusername",
-      "email": "email@domain.com",
-      "token": "yourtoken",
-      "refreshToken": "yourrefreshtoken",
-      "expiration": "TimeDate"
-  }
+Esta app implementa un sistema estándar de CRUD para todas las entidades:
 ```
-
-#### Renueva un token si se proporciona un refresh token válido.
-
-```http
-  POST api/user/refresh-token
-  "Authorization": "Bearer @token"
+  GET api/{controlador}/listar
 ```
-
-#### Revoca un token, evitando su reutilización.
-
-```http
-  POST api/user/logout
-  "Authorization": "Bearer @token"
 ```
-
-
-🦬 TokenService | How it works
-------------
-
-### Generación de Tokens
-
-La generación de tokens se lleva a cabo mediante el método `GenerateTokenSignature`. Este método toma como entrada información del usuario y genera un token firmado con una clave secreta.
-
-```csharp
-public string GenerateTokenSignature(PayloadTokenDto clientInfo, DateTime expiration);
+  POST api/{controlador}/crear
 ```
-
-### Verificación de Tokens
-
-La verificación se realiza a través del método VerifyTokenSignature, que comprueba tanto la firma como la fecha de expiración del token.
-
-```csharp
-public bool VerifyTokenSignature(string token, PayloadTokenDto clientInfo, DateTime expiration);
 ```
-
-### Generación de Refresh Token
-
-El refresh token al no guardar metadatos no tiene porqué ser un hash fuerte, es más como un identificador así que se genera un GUID.
-
-```csharp
-public string GenerateRefreshToken();
+  PUT api/{controlador}/actualizar/{id}
 ```
-
-### Implementación de encriptación HMACSHA256
-
-Recibimos un string por parámetro (en este caso se espera que sea un JSON).
-```csharp
-private string ComputeSignature(string data);
 ```
-
-Creamos una nueva instancia del objeto HMACSHA256 y pasamos por parámetro la _secretKey covertida a un arreglo de bytes (necesario para la instancia).
-```csharp
-using HMACSHA256 hmac = new HMACSHA256(Encoding.UTF8.GetBytes(_secretKey));
+  DELETE api/{controlador}/eliminar/{id}
 ```
+NOTA** Debemos tener en cuenta que, al momento de CREAR y ACTUALIZAR, debemos devolver una estructura idéntica a la obtenida cuando listamos.
 
-Convertimos a un arreglo de bytes la información del usuario.
-```csharp
-byte[] dataBytes = Encoding.UTF8.GetBytes(data);
+### ENDPOINTS ESPECÍFICOS
+1. Crear un consulta que permita visualizar los veterinarios cuya especialidad sea Cirujano vascular.
+NOTA** Los espacios se definen con '%' en la URL
 ```
+  GET api/veterinario/listarXEspecialidad/{especialidad}
+  GET api/veterinario/listarXEspecialidad/Cirujano%Cardiovascular
+```
+![image](https://github.com/adrianAraqueG/dotnet_veterinaria/assets/79146629/6a94d891-dbc0-438e-9ba9-347ae34031cd)
 
-Usamos el método propio nuestra instancia HMACSHA256 para 'computar' el hash final.
-```csharp
-byte[] hashBytes = hmac.ComputeHash(dataBytes);
+2. Listar los medicamentos que pertenezcan a el laboratorio Genfar
 ```
+  GET api/medicamento/listarPorLaboratorio/{Laboratorio}
+  GET api/medicamento/listarPorLaboratorio/Genfar
+```
+![image](https://github.com/adrianAraqueG/dotnet_veterinaria/assets/79146629/f314e215-09ad-439a-baca-e6c92c97750c)
 
-Por último retornamos el hash convertido a texto (Base64) para poder utilizarlo en un cotexto normal
-```csharp
-return Convert.ToBase64String(hashBytes);
+3. Mostrar las mascotas que se encuentren registradas cuya especie sea felina.
 ```
+  GET api/mascota/listarPorEspecie/{especie}
+  GET api/mascota/listarPorEspecie/felina
+```
+![image](https://github.com/adrianAraqueG/dotnet_veterinaria/assets/79146629/2d3e1bb6-52f3-479f-a591-4f78cf1d86e6)
+
+4. Listar los propietarios y sus mascotas.
+```
+  GET api/propietario/listarPropsConMascotas
+```
+![image](https://github.com/adrianAraqueG/dotnet_veterinaria/assets/79146629/8935ce7f-e656-4001-8c20-440aa6eca8c9)
+
+
+5. Listar los medicamentos que tenga un precio de venta mayor a 50000
+```
+  GET api/medicamento/listarPrecioMayorA/{precio}
+  GET api/medicamento/listarPrecioMayorA/50000
+```
+![image](https://github.com/adrianAraqueG/dotnet_veterinaria/assets/79146629/882b3772-e9bb-4f54-9387-a2c3660d353c)
+
+7. Listar todas las mascotas agrupadas por especie.
+```
+  GET api/mascota/listarAgrupacionPorEspecie
+```
+![image](https://github.com/adrianAraqueG/dotnet_veterinaria/assets/79146629/4f3997ad-623b-4487-8596-55eb7764a727)
+
+9. Listar las mascotas que fueron atendidas por un determinado veterinario.
+```
+  GET api/mascota/listarXVeterinario/{IdVeterinario}
+```
+![image](https://github.com/adrianAraqueG/dotnet_veterinaria/assets/79146629/865169fb-d3cd-4ddc-99e7-6ca7a9c9e62f)
