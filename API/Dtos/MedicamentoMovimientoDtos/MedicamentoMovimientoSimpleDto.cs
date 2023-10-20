@@ -1,13 +1,12 @@
-namespace Domain.Entities
+namespace API.Dtos
 {
-    public class MedicamentoMovimiento : BaseEntity
+    public class MedicamentoMovimientoSimpleDto
     {
+        public int Id {get; set;}
         public int Cantidad {get; set;}
         public DateTime Fecha {get; set;}
         public double PrecioUnitario {get; set;}
         public int IdMedicamento {get; set;}
-        public Medicamento Medicamento {get; set;}
         public int IdTipoMovimiento {get; set;}
-        public TipoMovimiento TipoMovimiento {get; set;}
     }
 }

@@ -33,7 +33,7 @@ namespace API.Controllers
         * CRUD
         */
         // GET
-        [HttpGet("getAll")]
+        [HttpGet("listar")]
         [MapToApiVersion("1.0")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -43,9 +43,22 @@ namespace API.Controllers
             return _mapper.Map<List<CitaDto>>(Citas);
         }
 
+        [HttpGet("listar")]
+        [HttpGet]
+        [MapToApiVersion("1.1")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<Pager<CitaDto>>> GetPagination([FromQuery] Params Params)
+        {
+            var (totalRecords, records) = await _unitOfwork.Citas.GetAllAsync(Params.PageIndex, Params.PageSize, Params.Search);
+            var listCita = _mapper.Map<List<CitaDto>>(records);
+            return new Pager<CitaDto>(listCita, totalRecords, Params.PageIndex, Params.PageSize, Params.Search);
+        }
+
+
 
         // POST
-        [HttpPost("nuevaCita")]
+        [HttpPost("crear")]
         [MapToApiVersion("1.0")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -55,6 +68,7 @@ namespace API.Controllers
             var result = await _unitOfwork.Citas.RegisterAsync(cita);
             return Ok(result);
         }
+
 
 
         // PUT
@@ -76,6 +90,7 @@ namespace API.Controllers
             await _unitOfwork.SaveAsync();
             return Ok($"Cita ${id} actualizada!");
         }
+
 
 
         // DELETE

@@ -14,7 +14,6 @@ namespace Application.Repository;
     }
 
 
-
     public override async Task<IEnumerable<Cita>> GetAllAsync()
     {
         return await _context.Citas
@@ -22,9 +21,6 @@ namespace Application.Repository;
             .Include(p => p.Veterinario)
             .ToListAsync();
     }
-
-
-
     public async Task<string> RegisterAsync(Cita model)
     {
         
