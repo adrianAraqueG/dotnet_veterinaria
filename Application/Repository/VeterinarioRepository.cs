@@ -13,9 +13,9 @@ namespace Application.Repository;
        _context = context;
     }
 
-    async Task<IEnumerable<Veterinario>> IVeterinarioRepository.ObtenerTodosCirujanosCVAsync(){
+    public async Task<IEnumerable<Veterinario>> ObtenerVeterinariosXEspecialidad(string especialidad){
         IEnumerable<Veterinario> VetCV = await _context.Veterinarios
-                                            .Where(p => p.Especialidad.ToLower() == "cirujano cardiovascular")
+                                            .Where(p => p.Especialidad.ToLower() == especialidad.ToLower())
                                             .ToListAsync();
         return VetCV;
     }
