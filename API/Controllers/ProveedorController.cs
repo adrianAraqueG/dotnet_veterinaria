@@ -12,7 +12,7 @@ namespace API.Controllers
     [ApiVersion("1.0")]
     [ApiVersion("1.1")]
 
-    // [Authorize]
+    [Authorize]
     public class ProveedorController : ApiBaseController
     {
         private readonly IUnitOfWork _unitOfwork;

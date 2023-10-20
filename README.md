@@ -20,12 +20,26 @@ Este repositorio contiene una APP ASP.NET llamada Veterinaria que busca cumplir 
 11. Listar las mascotas y sus propietarios cuya raza sea Golden Retriver
 12. Listar la cantidad de mascotas que pertenecen a una raza a una raza. Nota: Se debe mostrar una lista de las razas y la cantidad de mascotas que pertenecen a la raza.
 
+#### Requerimientos Funcionales
+El proyecto de administración de veterinaria debe cumplir con los siguientes requerimientos funcionales:
+
+1. Autenticación y autorización:
+    - El sistema debe implementar protección en los endpoints utilizando JWT (JSON Web Tokens). El token tiene una duracion de 1 minuto. ✔️
+    - Se debe implementar refresh token. ✔️
+    - Debe restringir las peticiones a los endpoints según los roles de los usuarios. ✔️
+2. Se debe permitir realizar procesos de creacion, edicion, eliminacion y listado de informacion de cada una de las tablas ✔️
+3. El backend debe permitir restringir peticiones consecutivos usando tecnicas de limitacion por IP. ✔️
+4. El backend debe permitir realizar la paginacion en  las peticiones get de todos los controladores.
+5. Los controladores deben implementar 2 versiones diferentes (Query y Header)
+
 🔧 Instalación
 -------------------
 1. Clonar el repo
 2. Importar default_db.sql a nuestro MySQL usando cualquier gestor de bases de datos.
 3. Configurar la conexión en ´appsettings.json´ (NO cambiar nombre de database)
 4. dotnet run 🚀☘️
+
+NOTA** Si se encuentra con problemas de consulta y autorización puede comentar [Authorization] del controlador que quiera usar.
 
 ## API Reference 🛰️
 Antes de poder hacer consultas debemos loguearnos.

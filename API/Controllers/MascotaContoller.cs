@@ -12,7 +12,7 @@ namespace API.Controllers
     [ApiVersion("1.0")]
     [ApiVersion("1.1")]
 
-    // [Authorize]
+    [Authorize]
     public class MascotaController : ApiBaseController
     {
         private readonly IUnitOfWork _unitOfwork;
@@ -36,6 +36,25 @@ namespace API.Controllers
                 var masc = await _unitOfwork.Mascotas.ObtenerPorEspecie(especie);
                 return _mapper.Map<List<MascotaSimpleDto>>(masc);
                 // return Ok(masc);
+            }catch(Exception err){
+                return NotFound($"No hay registros. \n {err}");
+            }
+        }
+
+        [HttpGet("listarConPropsPorRaza/{raza}")]
+        [MapToApiVersion("1.0")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<IEnumerable<MascotaSimpleDto>>> ObtenerPorRazaConProps(string raza)
+        {
+            string espParsed = raza;
+            if(raza.Contains("%")){
+                espParsed = raza.Replace("%", " ");
+            }
+            try{
+                var masc = await _unitOfwork.Mascotas.ObtenerPorEspecie(espParsed);
+                // return _mapper.Map<List<MascotaSimpleDto>>(masc);
+                return Ok(masc);
             }catch(Exception err){
                 return NotFound($"No hay registros. \n {err}");
             }

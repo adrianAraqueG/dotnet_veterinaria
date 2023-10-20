@@ -42,4 +42,12 @@ namespace Application.Repository;
 
         return result;
     }
+
+    public async Task<IEnumerable<object>> ObtenerMascPropsXRaza(string raza){
+        var mascotas = await(from m in _context.Mascotas
+                            join r in _context.Razas on m.IdRaza equals r.Id
+                            where r.Nombre == raza
+                            select m).ToListAsync();
+        return mascotas;
+    }
 }
