@@ -1,6 +1,6 @@
 namespace API.Dtos;
 public class TipoMovimientoRegDto
 {
-    public int? Id {get; set;}
+    public int Id {get; set;}
     public string Nombre {get; set;}
 }
