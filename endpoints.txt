@@ -1,5 +1,4 @@
 Mascotas:
-    Buscar x especie 
     Mascotas Agrupadas x especie
     Mascotas atendidas por x veterinario
     Mascotas y propietarios x raza
