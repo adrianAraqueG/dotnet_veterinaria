@@ -1,6 +1,6 @@
 namespace API.Dtos
 {
-    public class VeterinarioDto{
+    public class VeterinarioRegDto{
         public int Id {get; set;}
         public string Nombre {get; set;}
         public string Telefono {get; set;}

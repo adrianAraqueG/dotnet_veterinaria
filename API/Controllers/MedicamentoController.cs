@@ -73,7 +73,7 @@ namespace API.Controllers
             var Medicamento = _mapper.Map<Medicamento>(model);
             _unitOfwork.Medicamentos.Add(Medicamento);
             await _unitOfwork.SaveAsync();
-            return Ok(Medicamento);
+            return Ok($"Medicamento creado correctamente!");
         }
 
 

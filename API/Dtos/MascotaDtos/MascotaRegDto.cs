@@ -1,6 +1,8 @@
+using Domain.Entities;
+
 namespace API.Dtos
 {
-    public class MascotaSimpleDto
+    public class MascotaRegDto
     {
         public int? Id {get; set;}
         public string Nombre {get; set;}

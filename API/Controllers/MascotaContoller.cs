@@ -13,11 +13,11 @@ namespace API.Controllers
     [ApiVersion("1.1")]
 
     // [Authorize]
-    public class LaboratorioController : ApiBaseController
+    public class MascotaController : ApiBaseController
     {
         private readonly IUnitOfWork _unitOfwork;
         private readonly IMapper _mapper;
-        public LaboratorioController(IUnitOfWork unitofwork, IMapper mapper)
+        public MascotaController(IUnitOfWork unitofwork, IMapper mapper)
         {
             _unitOfwork = unitofwork;
             _mapper = mapper;
@@ -37,21 +37,21 @@ namespace API.Controllers
         [MapToApiVersion("1.0")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<IEnumerable<LaboratorioDto>>> GetAll()
+        public async Task<ActionResult<IEnumerable<MascotaSimpleDto>>> GetAll()
         {
-            var Laboratorios = await _unitOfwork.Laboratorios.GetAllAsync();
-            return _mapper.Map<List<LaboratorioDto>>(Laboratorios);
+            var Mascotas = await _unitOfwork.Mascotas.GetAllAsync();
+            return _mapper.Map<List<MascotaSimpleDto>>(Mascotas);
         }
         // PAGINADO
         [HttpGet]
         [MapToApiVersion("1.1")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<Pager<LaboratorioDto>>> GetPagination([FromQuery] Params Params)
+        public async Task<ActionResult<Pager<MascotaSimpleDto>>> GetPagination([FromQuery] Params Params)
         {
-            var (totalRecords, records) = await _unitOfwork.Laboratorios.GetAllAsync(Params.PageIndex, Params.PageSize, Params.Search);
-            var listLaboratorio = _mapper.Map<List<LaboratorioDto>>(records);
-            return new Pager<LaboratorioDto>(listLaboratorio, totalRecords, Params.PageIndex, Params.PageSize, Params.Search);
+            var (totalRecords, records) = await _unitOfwork.Mascotas.GetAllAsync(Params.PageIndex, Params.PageSize, Params.Search);
+            var listMascota = _mapper.Map<List<MascotaSimpleDto>>(records);
+            return new Pager<MascotaSimpleDto>(listMascota, totalRecords, Params.PageIndex, Params.PageSize, Params.Search);
         }
 
 
@@ -61,19 +61,17 @@ namespace API.Controllers
         [MapToApiVersion("1.0")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> RegisterAsync(LaboratorioRegDto model)
+        public async Task<ActionResult> RegisterAsync(MascotaRegDto model)
         {
-            var existingLaboratorio = _unitOfwork.Laboratorios.Find(l => l.Nombre == model.Nombre).FirstOrDefault();
-
-            if (existingLaboratorio != null)
-            {
-                return BadRequest("Ya existe un laboratorio con el mismo nombre.");
+            try{
+                var Mascota = _mapper.Map<Mascota>(model);
+                _unitOfwork.Mascotas.Add(Mascota);
+                await _unitOfwork.SaveAsync();
+                return Ok($"Mascota creado correctamente!");
+            }catch(Exception err){
+                return BadRequest();
             }
-
-            var Laboratorio = _mapper.Map<Laboratorio>(model);
-            _unitOfwork.Laboratorios.Add(Laboratorio);
-            await _unitOfwork.SaveAsync();
-            return Ok($"Laboratorio creado correctamente!");
+            
         }
 
 
@@ -83,19 +81,19 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<string>> Put(int id, [FromBody] LaboratorioRegDto LaboratorioActualizado)
+        public async Task<ActionResult<string>> Put(int id, [FromBody] MascotaRegDto MascotaActualizado)
         {
-            var laboratorioExists = _unitOfwork.Laboratorios.GetByIdAsync(id);
+            var MascotaExists = _unitOfwork.Mascotas.GetByIdAsync(id);
 
-            if (laboratorioExists == null)
+            if (MascotaExists == null)
             {
                 return NotFound();
             }
 
-            var Laboratorio = _mapper.Map<Laboratorio>(LaboratorioActualizado);
-            _unitOfwork.Laboratorios.Update(Laboratorio);
+            var Mascota = _mapper.Map<Mascota>(MascotaActualizado);
+            _unitOfwork.Mascotas.Update(Mascota);
             await _unitOfwork.SaveAsync();
-            return Ok($"Laboratorio {id} actualizado!");
+            return Ok($"Mascota {id} actualizado!");
         }
 
 
@@ -106,14 +104,14 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<string>> Delete(int id)
         {
-            var Laboratorio = await _unitOfwork.Laboratorios.GetByIdAsync(id);
+            var Mascota = await _unitOfwork.Mascotas.GetByIdAsync(id);
 
-            if (Laboratorio == null)
+            if (Mascota == null)
             {
                 return NotFound();
             }
 
-            _unitOfwork.Laboratorios.Remove(Laboratorio);
+            _unitOfwork.Mascotas.Remove(Mascota);
             await _unitOfwork.SaveAsync();
             return Ok($"Registro {id} eliminado correctamente!");
         }

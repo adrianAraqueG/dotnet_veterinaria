@@ -13,11 +13,11 @@ namespace API.Controllers
     [ApiVersion("1.1")]
 
     // [Authorize]
-    public class LaboratorioController : ApiBaseController
+    public class TipoMovimientoController : ApiBaseController
     {
         private readonly IUnitOfWork _unitOfwork;
         private readonly IMapper _mapper;
-        public LaboratorioController(IUnitOfWork unitofwork, IMapper mapper)
+        public TipoMovimientoController(IUnitOfWork unitofwork, IMapper mapper)
         {
             _unitOfwork = unitofwork;
             _mapper = mapper;
@@ -37,21 +37,21 @@ namespace API.Controllers
         [MapToApiVersion("1.0")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<IEnumerable<LaboratorioDto>>> GetAll()
+        public async Task<ActionResult<IEnumerable<TipoMovimientoSimpleDto>>> GetAll()
         {
-            var Laboratorios = await _unitOfwork.Laboratorios.GetAllAsync();
-            return _mapper.Map<List<LaboratorioDto>>(Laboratorios);
+            var TipoMovimientos = await _unitOfwork.TipoMovimientos.GetAllAsync();
+            return _mapper.Map<List<TipoMovimientoSimpleDto>>(TipoMovimientos);
         }
         // PAGINADO
         [HttpGet]
         [MapToApiVersion("1.1")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<Pager<LaboratorioDto>>> GetPagination([FromQuery] Params Params)
+        public async Task<ActionResult<Pager<TipoMovimientoSimpleDto>>> GetPagination([FromQuery] Params Params)
         {
-            var (totalRecords, records) = await _unitOfwork.Laboratorios.GetAllAsync(Params.PageIndex, Params.PageSize, Params.Search);
-            var listLaboratorio = _mapper.Map<List<LaboratorioDto>>(records);
-            return new Pager<LaboratorioDto>(listLaboratorio, totalRecords, Params.PageIndex, Params.PageSize, Params.Search);
+            var (totalRecords, records) = await _unitOfwork.TipoMovimientos.GetAllAsync(Params.PageIndex, Params.PageSize, Params.Search);
+            var listTipoMovimiento = _mapper.Map<List<TipoMovimientoSimpleDto>>(records);
+            return new Pager<TipoMovimientoSimpleDto>(listTipoMovimiento, totalRecords, Params.PageIndex, Params.PageSize, Params.Search);
         }
 
 
@@ -61,19 +61,20 @@ namespace API.Controllers
         [MapToApiVersion("1.0")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> RegisterAsync(LaboratorioRegDto model)
+        public async Task<ActionResult> RegisterAsync(TipoMovimientoRegDto model)
         {
-            var existingLaboratorio = _unitOfwork.Laboratorios.Find(l => l.Nombre == model.Nombre).FirstOrDefault();
+            var existingTipoMovimiento = _unitOfwork.TipoMovimientos.Find(l => l.Nombre == model.Nombre).FirstOrDefault();
 
-            if (existingLaboratorio != null)
+            if (existingTipoMovimiento != null)
             {
-                return BadRequest("Ya existe un laboratorio con el mismo nombre.");
+                return BadRequest("Ya existe un TipoMovimiento con el mismo nombre.");
             }
 
-            var Laboratorio = _mapper.Map<Laboratorio>(model);
-            _unitOfwork.Laboratorios.Add(Laboratorio);
+            var TipoMovimiento = _mapper.Map<TipoMovimiento>(model);
+            _unitOfwork.TipoMovimientos.Add(TipoMovimiento);
             await _unitOfwork.SaveAsync();
-            return Ok($"Laboratorio creado correctamente!");
+            return Ok($"TipoMovimiento creado correctamente!");
+            
         }
 
 
@@ -83,19 +84,19 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<string>> Put(int id, [FromBody] LaboratorioRegDto LaboratorioActualizado)
+        public async Task<ActionResult<string>> Put(int id, [FromBody] TipoMovimientoRegDto TipoMovimientoActualizado)
         {
-            var laboratorioExists = _unitOfwork.Laboratorios.GetByIdAsync(id);
+            var TipoMovimientoExists = _unitOfwork.TipoMovimientos.GetByIdAsync(id);
 
-            if (laboratorioExists == null)
+            if (TipoMovimientoExists == null)
             {
                 return NotFound();
             }
 
-            var Laboratorio = _mapper.Map<Laboratorio>(LaboratorioActualizado);
-            _unitOfwork.Laboratorios.Update(Laboratorio);
+            var TipoMovimiento = _mapper.Map<TipoMovimiento>(TipoMovimientoActualizado);
+            _unitOfwork.TipoMovimientos.Update(TipoMovimiento);
             await _unitOfwork.SaveAsync();
-            return Ok($"Laboratorio {id} actualizado!");
+            return Ok($"TipoMovimiento {id} actualizado!");
         }
 
 
@@ -106,14 +107,14 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<string>> Delete(int id)
         {
-            var Laboratorio = await _unitOfwork.Laboratorios.GetByIdAsync(id);
+            var TipoMovimiento = await _unitOfwork.TipoMovimientos.GetByIdAsync(id);
 
-            if (Laboratorio == null)
+            if (TipoMovimiento == null)
             {
                 return NotFound();
             }
 
-            _unitOfwork.Laboratorios.Remove(Laboratorio);
+            _unitOfwork.TipoMovimientos.Remove(TipoMovimiento);
             await _unitOfwork.SaveAsync();
             return Ok($"Registro {id} eliminado correctamente!");
         }

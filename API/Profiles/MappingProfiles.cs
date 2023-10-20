@@ -15,6 +15,7 @@ public class MappingProfiles : Profile
         
         CreateMap<Mascota, MascotaDto>().ReverseMap();
         CreateMap<Mascota, MascotaSimpleDto>().ReverseMap();
+        CreateMap<Mascota, MascotaRegDto>().ReverseMap();
 
         CreateMap<Veterinario, VeterinarioDto>().ReverseMap();
 
@@ -26,10 +27,25 @@ public class MappingProfiles : Profile
         CreateMap<Medicamento, MedicamentoRegDto>().ReverseMap();
 
         CreateMap<MedicamentoMovimiento, MedicamentoMovimientoSimpleDto>().ReverseMap();
+        CreateMap<MedicamentoMovimiento, MedicamentoMovimientoRegDto>().ReverseMap();
 
         CreateMap<Tratamiento, TratamientoSimpleDto>().ReverseMap();
+        CreateMap<Tratamiento, TratamientoRegDto>().ReverseMap();
 
         CreateMap<Proveedor, ProveedorSimpleDto>().ReverseMap();
+        CreateMap<Proveedor, ProveedorRegDto>().ReverseMap();
+        
+        CreateMap<Propietario, PropietarioRegDto>().ReverseMap();
+        CreateMap<Propietario, PropietarioSimpleDto>().ReverseMap();
+
+        CreateMap<Raza, RazaSimpleDto>().ReverseMap();
+        CreateMap<Raza, RazaRegDto>().ReverseMap();
+
+        CreateMap<Especie, EspecieRegDto>().ReverseMap();
+        CreateMap<Especie, EspecieSimpleDto>().ReverseMap();
+
+        CreateMap<TipoMovimiento, TipoMovimientoSimpleDto>().ReverseMap();
+        CreateMap<TipoMovimiento, TipoMovimientoRegDto>().ReverseMap();
 
 
     }
