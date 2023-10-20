@@ -1,0 +1,24 @@
+Veterinarios:
+    Buscar x Especialidad
+Medicamentos:
+    Buscar x Laboratorio
+    Buscar $> 50k
+Mascotas:
+    Buscar x especie 
+    Mascotas Agrupadas x especie
+    Mascotas atendidas por x veterinario
+    Mascotas y propietarios x raza
+Propietarios:
+    Buscar propietario y mascotas
+Citas:
+    Buscar mascotas x motivo de consulta
+MedicamentoMovimientos:
+    Listar medicamentos y valor total
+Proveedores:
+    Listar proveedores por x medicamento
+Raza:
+Listar la cantidad de mascotas que pertenecen a una raza a una raza. Nota: Se debe mostrar una lista de las razas y la cantidad de mascotas que pertenecen a la raza.
+
+
+
+
