@@ -26,6 +26,18 @@ namespace API.Controllers
         /*
         * MÉTODOS ESPECÍFICOS
         */
+        [HttpGet("listarCirujanosCardiovasculares")]
+        [MapToApiVersion("1.0")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<IEnumerable<VeterinarioSimpleDto>>> GetCirujanosCV(){
+            var cirujanos = await _unitOfwork.Veterinarios.ObtenerTodosCirujanosCVAsync();
+            if(cirujanos != null){
+                return _mapper.Map<List<VeterinarioSimpleDto>>(cirujanos);
+            }else{
+                return NotFound();
+            }
+        }
 
 
 
