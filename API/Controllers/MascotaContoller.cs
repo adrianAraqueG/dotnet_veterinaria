@@ -30,12 +30,26 @@ namespace API.Controllers
         [MapToApiVersion("1.0")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<IEnumerable<MascotaSimpleDto>>> ObtenerPorRaza(string especie)
+        public async Task<ActionResult<IEnumerable<MascotaSimpleDto>>> ObtenerPorEspecie(string especie)
         {
             try{
                 var masc = await _unitOfwork.Mascotas.ObtenerPorEspecie(especie);
                 return _mapper.Map<List<MascotaSimpleDto>>(masc);
                 // return Ok(masc);
+            }catch(Exception err){
+                return NotFound($"No hay registros. \n {err}");
+            }
+        }
+
+        [HttpGet("listarAgrupacionPorEspecie")]
+        [MapToApiVersion("1.0")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<IEnumerable<object>>> ObtenerAgrupacionXEspecie()
+        {
+            try{
+                var masc = await _unitOfwork.Mascotas.ObtenerAgrupadasPorEspecie();
+                return Ok(masc);
             }catch(Exception err){
                 return NotFound($"No hay registros. \n {err}");
             }

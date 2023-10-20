@@ -16,9 +16,23 @@ namespace Application.Repository;
     public async Task<IEnumerable<Mascota>> ObtenerPorEspecie(string especie){
         IEnumerable<Mascota> result = await _context.Mascotas
                                                     .Include(m => m.Raza)
-                                                    .ThenInclude(r => r.Especie)
+                                                    .ThenInclude(r => r.Especie) 
                                                     .Where(m => m.Raza.Especie.Nombre == especie)
                                                     .ToListAsync();
+        return result;
+    }
+
+    public async Task<object> ObtenerAgrupadasPorEspecie(){
+        var result = await (from m in _context.Mascotas
+                       join r in _context.Razas on m.IdRaza equals r.Id
+                       join e in _context.Especies on r.IdEspecie equals e.Id
+                       group m by e.Nombre into grouped
+                       select new 
+                       {
+                           Especie = grouped.Key,
+                           Mascotas = grouped.Select(m => m.Nombre).ToList()
+                       }).ToListAsync();
+
         return result;
     }
 }
