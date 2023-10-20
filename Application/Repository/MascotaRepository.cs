@@ -21,6 +21,13 @@ namespace Application.Repository;
                                                     .ToListAsync();
         return result;
     }
+    public async Task<IEnumerable<Mascota>> ObtenerMascXVeterinario(int IdVet){
+        IEnumerable<Mascota> result = await _context.Citas
+                                    .Where(c => c.IdVeterinario == IdVet)
+                                    .Select(c => c.Mascota)
+                                    .ToListAsync();
+        return result;
+    }
 
     public async Task<object> ObtenerAgrupadasPorEspecie(){
         var result = await (from m in _context.Mascotas
